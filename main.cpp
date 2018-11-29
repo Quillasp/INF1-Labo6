@@ -23,11 +23,11 @@ using namespace std;
 string montantVaudois(double montant);
 string montantDizaine(int montant);
 string montantCentaine(int montant);
+string montantMillier(int montant);
 
 string unites(int montant);
 string dizaines(int montant);
 string centaines(int montant);
-string montantMillier(int montant);
 
 int main() {
 	double montant;
@@ -47,12 +47,19 @@ int main() {
 string montantVaudois(double montant) {
 
 	int montantEntier = (int)(montant + 0.005);
-	return montantCentaine(montantEntier);
+	if (montantEntier < 1000)
+		return montantCentaine(montantEntier);
+	else {
+		return montantMillier(montantEntier);
+	}
 }
 
 string montantDizaine(int montant) {
 
-	if (montant >= 1 && montant <= 9)
+	if (montant == 0)
+		return "";
+
+	else if (montant >= 1 && montant <= 9)
 		return unites(montant);
 
 	else if (montant >= 11 && montant <= 16)
@@ -70,7 +77,10 @@ string montantDizaine(int montant) {
 
 string montantCentaine(int montant) {
 
-	if (montant >= 100 && montant <= 999) {
+	if (montant < 100)
+		return montantDizaine(montant);
+
+	else if (montant >= 100 && montant <= 999) {
 		if (montant == 100)
 			return centaines(montant);
 		else if (montant > 100) {
@@ -83,6 +93,17 @@ string montantCentaine(int montant) {
 				return unites(montant / 100) + " " + centaines(100) + " " + montantDizaine(dizaine);
 		}
 	}
+}
+
+string montantMillier(int montant) {
+
+	int montantMille = montant / 1000;
+	int montantCent = montant % 1000;
+
+	if (montant >= 1000 && montant <= 1999)
+		return "mille " + montantCentaine(montantCent);
+	else
+		return montantCentaine(montantMille) + " mille " + montantCentaine(montantCent);
 }
 
 string unites(int montant) {

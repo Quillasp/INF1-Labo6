@@ -44,6 +44,9 @@ string montantEnVaudois(double montant) {
 	int montantEntier = (int)(montant + 0.005);
 	int montantDecimal = (int)((montant + 0.005 - montantEntier) * 100);
 
+	if (montantEntier == 0 && montantDecimal > 0)
+		return montantCentaine(montantDecimal, 0) + (montantDecimal == 1 ? " centime" : " centimes");
+
 	string montantTotal;
 	if (montantEntier < 1000)
 		if (montantEntier == 0 || montantEntier == 1)

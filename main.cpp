@@ -20,7 +20,7 @@
 
 using namespace std;
 
-string montantVaudois(double montant);
+string montantEnVaudois(double montant);
 string montantDizaine(int montant);
 string montantCentaine(int montant, int millier);
 string montantMillier(int montant);
@@ -30,28 +30,34 @@ string dizaines(int montant);
 string centaines(int montant);
 
 int main() {
-	double montant;
+	double d;
 
-	for(;;) {
-		//cout << "Entrez une valeur :" << endl;
-		cin >> montant;
-
-
-
-		cout << montantVaudois(montant) << endl;
+	while( cin >> d ) {
+		cout << montantEnVaudois(d) << endl;
 	}
 
 	return 0;
 }
 
-string montantVaudois(double montant) {
+string montantEnVaudois(double montant) {
 
 	int montantEntier = (int)(montant + 0.005);
+	int montantDecimal = (int)((montant + 0.005 - montantEntier) * 100);
+
+	string montantTotal;
 	if (montantEntier < 1000)
-		return montantCentaine(montantEntier, 0);
-	else {
-		return montantMillier(montantEntier);
-	}
+		if (montantEntier == 0 || montantEntier == 1)
+			montantTotal = montantCentaine(montantEntier, 0) + " franc";
+		else
+			montantTotal = montantCentaine(montantEntier, 0) + " francs";
+	else
+		montantTotal = montantMillier(montantEntier) + " francs";
+
+
+	if (montantDecimal > 0)
+		montantTotal += " et " + montantCentaine(montantDecimal, 0) + (montantDecimal == 1 ? " centime" : " centimes");
+
+	return montantTotal;
 }
 
 string montantDizaine(int montant) {

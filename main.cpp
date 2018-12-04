@@ -25,6 +25,8 @@ const int UN = 1;
 const int DIX = 10;
 const int CENT = 100;
 const int MILLE = 1000;
+const int MIN = 0;
+const int MAX = 1000000;
 
 const double AJUSTEMENT = 0.005;
 
@@ -73,17 +75,17 @@ int main() {
 string montantEnVaudois(double montant) {
 
 	//vérifie que l'entrée utilisateur est comprise entre 0 et 1000000 (non compris)
-	if (montant < 0 || montant >= 1000000)
+	if (montant < MIN || montant >= MAX)
 		return "Entrée invalide";
 
 
 	// fait un arrondi au centieme a la decimale la plus proche peut importe le nombre entre
-	montant = floor(montant * CENT + 0.05) / CENT;
+	montant = floor(montant * CENT + AJUSTEMENT) / CENT;
 	//prend la partie entière du montant
 	int montantEntier = (int) (montant + AJUSTEMENT);
 
 	// après l'ajustement de la partie entière, vérifie que ça ne dépasse pas les bornes
-	if (montantEntier < 0 || montantEntier >= 1000000)
+	if (montantEntier < MIN || montantEntier >= MAX)
 		return "Entrée invalide";
 
 	//prend la valeur décimale du montant, la converti en dizaine entiere (0.60 devient 60) et la stocke dans montantDecimal.

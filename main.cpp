@@ -60,7 +60,7 @@ int main() {
 /**
  * [montantEnVaudois transcrit un nombre réel donne en toutes lettres]
  * @param  montant [montant  un réel compris entre 0 et 999999.99 CHF]
- * @return         [retourne une string ndiquant en vaudois le prix
+ * @return         [retourne une string indiquant en vaudois le prix
  *									en francs et centimes]
  * Exemples:
  * 12.30  -> "douze francs et trente centimes"
@@ -72,16 +72,27 @@ int main() {
  */
 string montantEnVaudois(double montant) {
 
+	//vérifie que l'entrée utilisateur est comprise entre 0 et 1000000 (non compris)
+	if (montant < 0 || montant >= 1000000)
+		return "Entrée invalide";
+
+
 	// fait un arrondi au centieme a la decimale la plus proche peut importe le nombre entre
-	montant = (montant * CENT) / CENT;
+	montant = floor(montant * CENT + 0.05) / CENT;
 	//prend la partie entière du montant
-	int montantEntier = (int)(montant + AJUSTEMENT);
+	int montantEntier = (int) (montant + AJUSTEMENT);
+
+	// après l'ajustement de la partie entière, vérifie que ça ne dépasse pas les bornes
+	if (montantEntier < 0 || montantEntier >= 1000000)
+		return "Entrée invalide";
+
 	//prend la valeur décimale du montant, la converti en dizaine entiere (0.60 devient 60) et la stocke dans montantDecimal.
-	int montantDecimal = (int)((montant + AJUSTEMENT - montantEntier) * CENT);
+	int montantDecimal = (int) ((montant + AJUSTEMENT - montantEntier) * CENT);
 	//si la partie entière vaut zero et la partie decimale est plus grande que zero alors on traite que le partie decimale et la partie entière vaut 0.
 	if (montantEntier == ZERO && montantDecimal > ZERO)
-		 //Si le montantDecimal vaut 1 alors CENTIME est au singulier sinon CENTIME est au PLURIEL.
-		return montantCentaine(montantDecimal, ZERO) + (montantDecimal == UN ? ESPACE + CENTIME : ESPACE + CENTIME + PLURIEL);
+		//Si le montantDecimal vaut 1 alors CENTIME est au singulier sinon CENTIME est au PLURIEL.
+		return montantCentaine(montantDecimal, ZERO) +
+			   (montantDecimal == UN ? ESPACE + CENTIME : ESPACE + CENTIME + PLURIEL);
 
 	string montantTotal;
 	//Si le montant entier est plus petit que 1000 on traite qu'une fois le nombre dans montantCentaine. L'idée c'est
@@ -99,7 +110,8 @@ string montantEnVaudois(double montant) {
 
 	//Traitement du cas où ni l'entier ni la décimale sont nulles. On ajoute au montantTotal tout simplement la décimale.
 	if (montantDecimal > ZERO)
-		montantTotal += ET + montantCentaine(montantDecimal, ZERO) + (montantDecimal == UN ? ESPACE + CENTIME : ESPACE + CENTIME + PLURIEL);
+		montantTotal += ET + montantCentaine(montantDecimal, ZERO) +
+						(montantDecimal == UN ? ESPACE + CENTIME : ESPACE + CENTIME + PLURIEL);
 
 	return montantTotal;
 }
@@ -190,7 +202,7 @@ string montantMillier(int montant) {
 		return MILLIER + ESPACE + montantCentaine(montantCent, ZERO);
 	// gère le cas ou il n'y a pas de centaines après les milliers
 	else if (montantCent == ZERO)
-		return montantCentaine(montantMille, montantMille) + ESPACE + MILLIER + ESPACE;
+		return montantCentaine(montantMille, montantMille) + ESPACE + MILLIER;
 	// gère tous les autres cas
 	else
 		return montantCentaine(montantMille, montantMille) + ESPACE + MILLIER + ESPACE + montantCentaine(montantCent, ZERO);
